@@ -17,12 +17,16 @@ RUN apt-get update && \
     libgeoip-dev \
     libsodium-dev \ 
     curl \
-    unzip \
-    docker-php-ext-install exif 
+    unzip
 
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
-    xdebug 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer &&\
+    pecl install redis xdebug && \
+    docker-php-ext-install exif \
+    pdo_mysql \
+    mysqli \
+    xsl \
+    xml && \
+    docker-php-ext-enable redis 
 
 # RUN usermod -u 1000 www-data && \
 #     groupmod -g 1000 www-data && \

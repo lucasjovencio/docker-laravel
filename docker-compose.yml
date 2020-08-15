@@ -7,6 +7,7 @@ services:
     container_name: laravel
     ports:
       - 9030:9030
+      - 9000:9000
     volumes:
       - "./src/project:/var/www/html"
       - "./php/config/php.ini:/usr/local/etc/php/php.ini"
@@ -33,12 +34,16 @@ services:
   laravel_database:
     container_name: laravel-db
     env_file: .env
-    image: mysql:latest
+    image: mysql:5.7
     restart: always
     ports:
       - "3307:3306"
     expose:
       - "3306"
+    networks:
+      - backend
+    volumes:
+      - database_laravel:/data
   laravel_redis:
     container_name: laravel-redis
     image: redis:5
@@ -54,4 +59,6 @@ networks:
     driver: bridge
 volumes:
   redis_laravel:
+    driver: local
+  database_laravel:
     driver: local
