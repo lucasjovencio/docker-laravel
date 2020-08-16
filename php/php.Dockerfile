@@ -19,17 +19,26 @@ RUN apt-get update && \
     curl \
     unzip
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer &&\
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     pecl install redis xdebug && \
+    docker-php-ext-enable redis  && \
     docker-php-ext-install exif \
     pdo_mysql \
     mysqli \
     xsl \
-    xml && \
-    docker-php-ext-enable redis 
+    xml \
+    intl \
+    soap \
+    mbstring \
+    bcmath \
+    xsl \
+    sockets && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-install gd
 
-# RUN usermod -u 1000 www-data && \
-#     groupmod -g 1000 www-data && \
-#     chown -R www-data:www-data /var/www/ && \
-#     chmod -R g+w /var/www/
-# USER www-data
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data && \
+    chown -R www-data:www-data /var/www/ && \
+    chmod -R g+w /var/www/
+
+USER www-data
