@@ -11,7 +11,7 @@ services:
     volumes:
       - "./src/project:/var/www/html"
       - "./php/config/php.ini:/usr/local/etc/php/php.ini"
-      # - "./php/config/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
+      - "./php/config/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
     networks:
       - backend
       - frontend
@@ -32,9 +32,12 @@ services:
     depends_on:
       - "laravel_php"
   laravel_database:
+    build:
+      dockerfile: "mysql/mysql.Dockerfile"
+      context: ./
     container_name: laravel-db
-    env_file: .env
-    image: mysql:5.7
+    env_file:
+      - .env
     restart: always
     ports:
       - "3307:3306"
@@ -43,7 +46,7 @@ services:
     networks:
       - backend
     volumes:
-      - database_laravel:/data
+      - db_laravel:/data
   laravel_redis:
     container_name: laravel-redis
     image: redis:5
@@ -60,5 +63,5 @@ networks:
 volumes:
   redis_laravel:
     driver: local
-  database_laravel:
+  db_laravel:
     driver: local
